@@ -15,3 +15,9 @@ output "bastion_launch_template_id" { value = try(module.bastion.launch_template
 output "bastion_instance_profile_name" { value = try(module.bastion.instance_profile_name, "") }
 output "monitoring_log_group" { value = try(module.monitoring.log_group_name, "") }
 output "cicd_role_name" { value = try(module.cicd.cicd_role_name, "") }
+
+# Phase3 outputs
+output "ecs_cluster_id" { value = try(module.ecs.cluster_id, "") }
+output "eks_cluster_name" { value = try(module.eks.cluster_name, "") }
+output "rds_endpoint" { value = try(module.databases.rds_endpoint, "") }
+output "storage_bucket_id" { value = try(module.storage.bucket_id, "") }

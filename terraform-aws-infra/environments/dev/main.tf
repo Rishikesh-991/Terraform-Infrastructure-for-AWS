@@ -101,3 +101,32 @@ module "cicd" {
   create = false
   tags = merge(var.common_tags, { Module = "cicd" })
 }
+
+# Phase3 modules (disabled by default)
+module "ecs" {
+  source = "../../modules/ecs"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "ecs" })
+}
+
+module "eks" {
+  source = "../../modules/eks"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "eks" })
+}
+
+module "databases" {
+  source = "../../modules/databases"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "databases" })
+}
+
+module "storage" {
+  source = "../../modules/storage"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "storage" })
+}
