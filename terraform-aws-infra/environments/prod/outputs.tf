@@ -9,3 +9,9 @@ output "db_security_group_id" { value = module.security_groups.db_sg_id }
 output "bastion_security_group_id" { value = module.security_groups.bastion_sg_id }
 output "ec2_launch_template_id" { value = module.ec2.launch_template_id }
 output "ec2_instance_profile_name" { value = module.iam.ec2_instance_profile_name }
+
+# Phase2 outputs
+output "bastion_launch_template_id" { value = try(module.bastion.launch_template_id, "") }
+output "bastion_instance_profile_name" { value = try(module.bastion.instance_profile_name, "") }
+output "monitoring_log_group" { value = try(module.monitoring.log_group_name, "") }
+output "cicd_role_name" { value = try(module.cicd.cicd_role_name, "") }

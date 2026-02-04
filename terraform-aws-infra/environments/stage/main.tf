@@ -48,3 +48,32 @@ module "ec2" { source = "../../modules/ec2"
   security_group_ids = [module.security_groups.app_sg_id]
   tags = merge(var.common_tags, { Module = "ec2" })
 }
+
+# Phase2 modules (disabled by default)
+module "bastion" {
+  source = "../../modules/bastion-ssm"
+  environment = var.environment
+  create_bastion = false
+  tags = merge(var.common_tags, { Module = "bastion" })
+}
+
+module "monitoring" {
+  source = "../../modules/monitoring"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "monitoring" })
+}
+
+module "secrets" {
+  source = "../../modules/secrets"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "secrets" })
+}
+
+module "cicd" {
+  source = "../../modules/cicd"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "cicd" })
+}
