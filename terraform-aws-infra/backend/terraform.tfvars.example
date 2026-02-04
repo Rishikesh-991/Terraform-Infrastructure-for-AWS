@@ -1,0 +1,17 @@
+# ============================================================================
+# Backend Configuration Variables
+# ============================================================================
+# Copy this file to terraform.tfvars and customize for your environment
+
+aws_region   = "us-east-1"
+project_name = "enterprise"
+
+log_retention_days = 90
+
+enable_mfa_delete = false
+
+tags = {
+  Owner       = "DevOps"
+  CostCenter  = "Engineering"
+  Environment = "backend"
+}
