@@ -18,7 +18,17 @@ This project provides a modular, scalable Terraform codebase for deploying a com
 - **Well-Architected:** Built to AWS best practices: security, cost optimization, operational excellence
 - **Comprehensive Logging:** CloudWatch integration, audit trails, and monitoring
 
-### Service Coverage
+
+<!-- Badges -->
+[![Terraform](https://img.shields.io/badge/terraform-%3E%3D1.0-blue.svg)](https://www.terraform.io/)
+[![AWS Provider](https://img.shields.io/badge/aws%20provider-%3E%3D5.0-orange.svg)](https://registry.terraform.io/providers/hashicorp/aws/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI Status](https://github.com/Rishikesh-991/AWS-terraform/actions/workflows/ci-checks.yml/badge.svg?branch=main)](https://github.com/Rishikesh-991/AWS-terraform/actions)
+
+**Topics:** `terraform` | `aws` | `infrastructure-as-code` | `multi-environment` | `modules` | `devops`
+
+---
+
 
 **Phase 1 — Networking & Compute Foundation**
 - VPC with multi-AZ subnets, NAT gateways, and gateway endpoints
