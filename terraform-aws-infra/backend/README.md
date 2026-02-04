@@ -1,170 +1,118 @@
-# Backend Configuration
+# Backend Module
 
-## Overview
+**Purpose:** Creates the remote state backend for Terraform state management across all environments.
 
-This module sets up the remote state backend infrastructure for Terraform using S3 and DynamoDB. This is a **one-time setup** that must be completed before deploying any other infrastructure.
+## What It Creates
 
-## Resources Created
+- **S3 Bucket:** Versioned, encrypted bucket for storing terraform.tfstate files
+- **DynamoDB Table:** For state locking to prevent concurrent modifications
+- **KMS Key:** For encrypting state files at rest
+- **CloudTrail:** For auditing access to state files
+- **S3 Logging Bucket:** For logging S3 access
 
-### 1. **S3 Bucket for State Storage**
-- Versioned: Maintains history of all state changes
-- Encrypted: KMS encryption at rest with key rotation
-- Logging: Access logs stored in separate bucket
-- Private: Blocks all public access
+## Inputs
 
-### 2. **DynamoDB Table for State Locking**
-- Prevents concurrent modifications to state
-- On-demand billing (pay-per-request)
-- Point-in-time recovery enabled
-- Encrypted with KMS
-- TTL enabled for cleanup
+| Name | Type | Default | Description |
+|------|------|---------|-------------|
+| `aws_region` | string | `us-east-1` | AWS region for backend resources |
+| `project_name` | string | `terraform` | Project name for resource naming |
+| `log_retention_days` | number | `90` | CloudTrail log retention period |
+| `enable_mfa_delete` | bool | `false` | Require MFA to delete objects |
+| `tags` | map(string) | `{}` | Tags to apply to all resources |
 
-### 3. **KMS Key for Encryption**
-- Encrypts S3 bucket contents
-- Encrypts DynamoDB table
-- Automated key rotation
-- CloudTrail audit logging
+## Outputs
 
-### 4. **CloudTrail Audit Logging**
-- Tracks all API calls to state resources
-- Logs stored in Glacier for long-term retention
-- Helps track who accessed what and when
+| Name | Description |
+|------|-------------|
+| `s3_bucket_name` | S3 bucket name for state storage |
+| `s3_bucket_arn` | S3 bucket ARN |
+| `dynamodb_table_name` | DynamoDB table name for state locking |
+| `dynamodb_table_arn` | DynamoDB table ARN |
+| `kms_key_id` | KMS key ID for encryption |
+| `kms_key_arn` | KMS key ARN |
+| `terraform_backend_config` | Complete backend configuration block |
 
-### 5. **Access Logs Bucket**
-- Stores S3 bucket access logs
-- Automatic archival to Glacier after 90 days
-- Automatic deletion after 1 year
+## Usage
 
-## Deployment Instructions
-
-### Step 1: Create terraform.tfvars
+### Step 1: Deploy Backend
 
 ```bash
-cat > terraform.tfvars << 'VARS'
-aws_region   = "us-east-1"
-project_name = "my-project"
-VARS
-```
-
-### Step 2: Initialize Terraform (LOCAL STATE ONLY)
-
-```bash
+cd terraform-aws-infra/backend
 terraform init
+terraform plan -out=backend.tfplan
+terraform apply backend.tfplan
 ```
 
-Note: This initial deployment uses local state because we're creating the backend itself.
-
-### Step 3: Validate Configuration
+### Step 2: Capture Outputs
 
 ```bash
-terraform validate
+terraform output
+# Note these values for Step 3
 ```
 
-### Step 4: Plan Deployment
+### Step 3: Configure Environments
 
-```bash
-terraform plan -out=tfplan
-```
+Edit `environments/dev/backend.tf`:
 
-Review the plan to ensure:
-- S3 bucket is created with correct encryption
-- DynamoDB table is created for locking
-- KMS key is generated
-- CloudTrail is configured
-
-### Step 5: Apply Configuration
-
-```bash
-terraform apply tfplan
-```
-
-This will output the backend configuration needed for other environments.
-
-### Step 6: Copy Backend Configuration
-
-After successful apply, Terraform will output `backend_config` and `terraform_backend_config_content`. Copy the output and add it to each environment's `backend.tf`:
-
-```bash
-# For dev, stage, prod environments:
-cat > environments/<ENV>/backend.tf << 'BACKEND'
+```hcl
 terraform {
   backend "s3" {
-    bucket         = "<from output>"
-    key            = "terraform.tfstate"
-    region         = "<from output>"
-    dynamodb_table = "<from output>"
+    bucket         = "output-s3_bucket_name"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "output-dynamodb_table_name"
     encrypt        = true
-    kms_key_id     = "<from output>"
+    kms_key_id     = "output-kms_key_arn"
   }
 }
-BACKEND
 ```
 
-## Security Considerations
+Repeat for `stage` and `prod` environments.
 
-✅ **Encryption:**
-- All data encrypted with KMS keys
-- Encryption enforced via bucket policy
-- Unencrypted uploads blocked
+### Step 4: Initialize Environments
 
-✅ **Access Control:**
-- S3 bucket is completely private
-- Public access blocked at all levels
-- Only IAM users/roles with permissions can access
-
-✅ **Audit:**
-- CloudTrail logs all state access
-- Logs stored in separate encrypted bucket
-- Long-term retention in Glacier
-
-✅ **Versioning:**
-- All state changes tracked
-- Can recover previous versions if needed
-- Noncurrent versions retained for 30 days
-
-## AWS Compliance
-
-- ✅ CIS AWS Foundations Benchmark
-- ✅ SOC 2 requirements
-- ✅ HIPAA compliance ready
-- ✅ PCI-DSS compliance ready
-
-## Costs
-
-**Typical Monthly Costs:**
-- S3 storage: $0.50-2.00 (minimal state files)
-- S3 versioning: $0.50-2.00
-- DynamoDB: $1.25 (on-demand, minimal)
-- KMS: $1.00 (1 key)
-- CloudTrail: $2.00
-- Glacier storage: $0.10-0.50
-
-**Total: ~$5-10/month**
-
-## Troubleshooting
-
-### Error: "S3 bucket name already exists"
-S3 bucket names are globally unique. Change `project_name` to something unique.
-
-### Error: "Access Denied"
-Ensure your AWS credentials have permissions to create S3, DynamoDB, KMS, and CloudTrail resources.
-
-### State Lock Issues
-If Terraform is stuck:
 ```bash
-terraform force-unlock <LOCK_ID>
+cd ../environments/dev
+terraform init  # Connects to remote backend
+terraform validate
+terraform plan -out=dev.tfplan
 ```
 
-## Next Steps
+## Key Security Features
 
-1. ✅ Backend deployed
-2. ➡️ Initialize environments with backend configuration
-3. ➡️ Deploy VPC module
-4. ➡️ Deploy networking (subnets, routes)
-5. ➡️ Deploy other modules
+✅ **Versioning Enabled:** Recover previous state if needed  
+✅ **KMS Encryption:** All objects encrypted at rest  
+✅ **MFA Delete:** Optional extra protection against accidental deletions  
+✅ **Access Logging:** All S3 access logged to separate bucket  
+✅ **CloudTrail:** All API calls audited  
+✅ **Public Access Blocked:** Prevents accidental public exposure  
+✅ **DynamoDB Locking:** Prevents concurrent Terraform operations  
 
-## References
+## Important Notes
 
-- [Terraform Remote State](https://www.terraform.io/language/state/remote)
-- [S3 Backend Configuration](https://www.terraform.io/language/settings/backends/s3)
-- [State Locking](https://www.terraform.io/language/state/locking)
+⚠️ **Deploy Once:** Backend should be created once and shared across all environments  
+⚠️ **Don't Delete:** Deleting backend removes state history  
+⚠️ **Backup S3 Bucket:** Consider cross-region replication for disasters recovery  
+⚠️ **Rotate KMS Keys:** Rotate keys annually for security compliance  
+
+## Disaster Recovery
+
+### Restore State From S3 Versioning
+
+```bash
+# List all state file versions
+aws s3api list-object-versions \
+  --bucket output-s3_bucket_name \
+  --prefix dev/terraform.tfstate
+
+# Restore specific version
+aws s3api get-object \
+  --bucket output-s3_bucket_name \
+  --key dev/terraform.tfstate \
+  --version-id VERSION_ID \
+  terraform.tfstate.backup
+```
+
+## Phase
+
+**Phase 1** — Foundation (one-time setup)
