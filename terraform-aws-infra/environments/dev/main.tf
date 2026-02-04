@@ -160,3 +160,65 @@ module "cost" {
   create = false
   tags = merge(var.common_tags, { Module = "cost" })
 }
+
+# Remaining service modules (disabled by default)
+module "alb" {
+  source = "../../modules/alb"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "alb" })
+}
+module "asg" {
+  source = "../../modules/asg"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "asg" })
+}
+module "aurora" {
+  source = "../../modules/aurora"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "aurora" })
+}
+module "dynamodb" {
+  source = "../../modules/dynamodb"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "dynamodb" })
+}
+module "elasticache" {
+  source = "../../modules/elasticache"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "elasticache" })
+}
+module "kms" {
+  source = "../../modules/kms"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "kms" })
+}
+module "lambda" {
+  source = "../../modules/lambda"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "lambda" })
+}
+module "nlb" {
+  source = "../../modules/nlb"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "nlb" })
+}
+module "route53_extra" {
+  source = "../../modules/route53"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "route53" })
+}
+module "ssm_extra" {
+  source = "../../modules/ssm"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "ssm" })
+}

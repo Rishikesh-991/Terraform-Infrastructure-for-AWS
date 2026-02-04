@@ -30,3 +30,15 @@ output "transit_gateway_id" { value = try(module.transit_gateway.transit_gateway
 # Phase5 outputs
 output "observability_log_group" { value = try(module.observability.log_group_name, "") }
 output "budgets" { value = try(module.cost.budgets, []) }
+
+# Remaining services outputs
+output "alb_dns" { value = try(module.alb.alb_dns_name, "") }
+output "asg_id" { value = try(module.asg.asg_id, "") }
+output "aurora_cluster_endpoint" { value = try(module.aurora.cluster_endpoint, "") }
+output "dynamodb_table" { value = try(module.dynamodb.table_name, "") }
+output "elasticache_id" { value = try(module.elasticache.elasticache_id, "") }
+output "kms_key_id_extra" { value = try(module.kms.kms_key_id, "") }
+output "lambda_arn_extra" { value = try(module.lambda.lambda_arn, "") }
+output "nlb_dns" { value = try(module.nlb.nlb_dns_name, "") }
+output "route53_zone_id" { value = try(module.route53_extra.zone_id, "") }
+output "ssm_documents" { value = try(module.ssm_extra.documents, []) }
