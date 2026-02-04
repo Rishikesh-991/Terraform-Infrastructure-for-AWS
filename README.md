@@ -473,7 +473,6 @@ For issues, feature requests, or contributions:
 
 ---
 
-**Last Updated:** February 2026
 **Terraform Version:** >= 1.0
 **AWS Provider:** >= 5.0
 **Author:** Rishikesh-991
