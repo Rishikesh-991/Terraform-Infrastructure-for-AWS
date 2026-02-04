@@ -26,3 +26,7 @@ output "storage_bucket_id" { value = try(module.storage.bucket_id, "") }
 output "guardduty_detector_id" { value = try(module.security_governance.guardduty_detector_id, "") }
 output "config_recorder_name" { value = try(module.security_governance.config_recorder_name, "") }
 output "transit_gateway_id" { value = try(module.transit_gateway.transit_gateway_id, "") }
+
+# Phase5 outputs
+output "observability_log_group" { value = try(module.observability.log_group_name, "") }
+output "budgets" { value = try(module.cost.budgets, []) }

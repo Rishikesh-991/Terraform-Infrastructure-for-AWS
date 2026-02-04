@@ -145,3 +145,18 @@ module "transit_gateway" {
   create = false
   tags = merge(var.common_tags, { Module = "transit-gateway" })
 }
+
+# Phase5 modules (disabled by default)
+module "observability" {
+  source = "../../modules/observability"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "observability" })
+}
+
+module "cost" {
+  source = "../../modules/cost"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "cost" })
+}
