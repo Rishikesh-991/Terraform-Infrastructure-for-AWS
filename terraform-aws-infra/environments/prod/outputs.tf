@@ -21,3 +21,8 @@ output "ecs_cluster_id" { value = try(module.ecs.cluster_id, "") }
 output "eks_cluster_name" { value = try(module.eks.cluster_name, "") }
 output "rds_endpoint" { value = try(module.databases.rds_endpoint, "") }
 output "storage_bucket_id" { value = try(module.storage.bucket_id, "") }
+
+# Phase4 outputs
+output "guardduty_detector_id" { value = try(module.security_governance.guardduty_detector_id, "") }
+output "config_recorder_name" { value = try(module.security_governance.config_recorder_name, "") }
+output "transit_gateway_id" { value = try(module.transit_gateway.transit_gateway_id, "") }

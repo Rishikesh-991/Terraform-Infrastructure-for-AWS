@@ -106,3 +106,18 @@ module "storage" {
   create = false
   tags = merge(var.common_tags, { Module = "storage" })
 }
+
+# Phase4 modules (disabled by default)
+module "security_governance" {
+  source = "../../modules/security-governance"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "security-governance" })
+}
+
+module "transit_gateway" {
+  source = "../../modules/transit-gateway"
+  environment = var.environment
+  create = false
+  tags = merge(var.common_tags, { Module = "transit-gateway" })
+}
