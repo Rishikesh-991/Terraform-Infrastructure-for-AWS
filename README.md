@@ -23,7 +23,7 @@ This project provides a modular, scalable Terraform codebase for deploying a com
 [![Terraform](https://img.shields.io/badge/terraform-%3E%3D1.0-blue.svg)](https://www.terraform.io/)
 [![AWS Provider](https://img.shields.io/badge/aws%20provider-%3E%3D5.0-orange.svg)](https://registry.terraform.io/providers/hashicorp/aws/latest)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![CI Status](https://github.com/Rishikesh-991/AWS-terraform/actions/workflows/ci-checks.yml/badge.svg?branch=main)](https://github.com/Rishikesh-991/AWS-terraform/actions)
+[![CI Status](https://github.com/Rishikesh-991/Terraform-Infrastructure-for-AWS/actions/workflows/ci-checks.yml/badge.svg?branch=main)](https://github.com/Rishikesh-991/Terraform-Infrastructure-for-AWS/actions)
 
 **Topics:** `terraform` | `aws` | `infrastructure-as-code` | `multi-environment` | `modules` | `devops`
 
@@ -98,8 +98,8 @@ Before you begin, ensure you have:
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/AWS-terraform.git
-cd AWS-terraform
+git clone https://github.com/Rishikesh-991/Terraform-Infrastructure-for-AWS.git
+cd Terraform-Infrastructure-for-AWS
 ```
 
 ### Step 2: Review Project Structure
